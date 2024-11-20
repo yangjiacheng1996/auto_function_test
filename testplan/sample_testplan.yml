@@ -1,0 +1,66 @@
+---
+- case:
+    case_name: "add int number"
+    steps:
+      - script: sample_case # import case/sample.py
+        function_name: add  # use function 'add' in sample.py
+        args:
+          a: 1
+          b: 2
+        assert:
+          - "boolean": "True"
+          - "equal": 3
+        description: "test add"
+      - script: sample_case
+        function_name: add
+        args:
+          a: "{{ ret }}"   # ret is the value which return by step1
+          b: 4
+        assert:
+          - "equal": 7
+          - "bigger": "{{ ret }}"  # The spaces on both sides do not affect the parsing of the variable.
+          - "smaller": 10
+          # This means: return of this step is bigger than former step , how a nice feature!
+- case:
+    case_name: "get douban top movies"
+    steps:
+      - script: sample_case
+        function_name: douban
+        args:
+          url: "{{ douban_top_moveis_url }}"
+          headers: "{{ douban_top_moveis_headers }}"
+        assert:
+          - "boolean": "True"
+- case:
+    case_name: "baidu search palworld"
+    steps:
+      - script: sample_case
+        function_name: search_baidu
+        args:
+          url: "{{ baidu_url }}"
+          baidu_search_box: "{{ baidu_search_box }}"
+          baidu_search_button: "{{ baidu_search_button }}"
+          text: "palworld"
+        assert:
+          - "boolean": "True"
+- case:
+    case_name: "get system ip"
+    steps:
+      - script: sample_case
+        function_name: run_cmd
+        args:
+          cmd: "ipconfig"
+        assert:
+          - "boolean": "True"
+      - script: sample_case
+        function_name: run_cmd
+        args:
+          cmd: "ip a"
+        assert:
+          - "boolean": "True"
+      - script: sample_case
+        function_name: run_cmd
+        args:
+          cmd: "ifconfig"
+        assert:
+          - "boolean": "True"
